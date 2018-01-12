@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shipinfo.admin.modules.admin.mapper.PublicShipTypeMapper">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, category, des
+    </sql>
+
+    <select id="listTypes" resultType="com.shipinfo.admin.modules.admin.entity.PublicShipType">
+        select * from t_public_ship_type where des=#{0}
+    </select>
+
+    <select id="getType"
+            resultType="PublicShipType">
+        select * from t_public_ship_type where id=#{type_id}
+    </select>
+    <select id="selectIdByShipType" resultType="java.lang.Integer">
+        select id from t_public_ship_type p where p.des='type' and p.category=#{0}
+    </select>
+
+</mapper>

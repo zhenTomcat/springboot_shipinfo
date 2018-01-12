@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shipinfo.admin.modules.sys.mapper.UserMapper">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, login_name AS loginName, password, name, last_login AS lastLogin, ip, del_flag AS delFlag, description, email, phone, identification, create_date AS createDate, update_date AS updateDate, create_by AS createBy, update_by AS updateBy, address, head_img_url AS headImgUrl, style_id AS styleId, company_id AS companyId, email_status AS emailStatus, email_time AS emailTime, email_code AS emailCode
+    </sql>
+    <select id="selectUserByUsername" resultMap="userMap">
+        select * from sys_user where login_name=#{username}
+    </select>
+
+    <resultMap id="userMap" type="user">
+        <id column="id" property="id"/>
+        <collection property="roles" column="id" ofType="Role"
+                    select="com.shipinfo.admin.modules.sys.mapper.RoleMapper.selectByUserId"/>
+    </resultMap>
+</mapper>

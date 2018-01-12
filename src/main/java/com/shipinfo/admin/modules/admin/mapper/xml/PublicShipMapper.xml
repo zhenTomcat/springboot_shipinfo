@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shipinfo.admin.modules.admin.mapper.PublicShipMapper">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, imo, status, name, build_year AS buildYear, builder, ship_type AS shipType, ice, own_manage AS ownManage, bunker, twopenult, threepenult, tpc, callsign, hp, fourpenult, nt, onelast, twolast, threelast, fourlast, onepenult, loa, beam, ggt, dwt, flag, ship_class AS shipClass, exname, ss, dd, speed, draft, ldt, me_maker_type AS meMakerType, me_maker AS meMaker, me_mype AS meMype, me_bhp_rpm AS meBhpRpm, me_cyl_bore AS meCylBore, aux_make AS auxMake, aux_type AS auxType, aux_qty AS auxQty, aux_rate_output AS auxRateOutput, aux_cyl_bore AS auxCylBore, crane_type AS craneType, crane_qty AS craneQty, boiler_heating_area AS boilerHeatingArea, boiler_water_evaporation AS boilerWaterEvaporation, boiler_gas_heating_area AS boilerGasHeatingArea, boiler_exhaust_heating_area AS boilerExhaustHeatingArea, ecg_maker AS ecgMaker, ecg_type AS ecgType, windlass_anchor AS windlassAnchor, windlass_capstan_mooring AS windlassCapstanMooring, tasishaft, anchor, anchor_chain_dia AS anchorChainDia, air_compressor_low AS airCompressorLow, freon_refrigerate AS freonRefrigerate, refrigerate_system_heat AS refrigerateSystemHeat, tubluar_heat_exhaust AS tubluarHeatExhaust, propeller, filename, update_date AS updateDate, remark, type_id AS typeId, owners_details AS ownersDetails, vessel_position AS vesselPosition, sellers_price AS sellersPrice, built_country AS builtCountry, dynamic, sea_fo_do AS seaFoDo, port_fo_do AS portFoDo, anchorage_fo_do AS anchorageFoDo, create_by AS createBy, create_date AS createDate, update_by AS updateBy, del_flag AS delFlag
+    </sql>
+
+    <select id="getPublicShip" resultType="com.shipinfo.admin.modules.admin.entity.PublicShip" parameterType="Parameter">
+        select * from t_public_ship s
+        <where>
+            1 = 1
+            <if test="imo!=null and imo!=''">
+                and s.imo like concat(concat('%',#{imo}),'%')
+            </if>
+            <if test="name!=null and name!=''">
+                and s.name like concat(concat('%',#{name}),'%')
+            </if>
+            <if test="tid !=0 and tid !=null and tid!=''">
+                and s.type_id=#{tid}
+            </if>
+            <if test="status!=null and status!=''">
+                and s.status =#{status}
+            </if>
+            <if test="startBuiltYear!=null and startBuiltYear!=''">
+                and substring(s.build_year,-4)>=#{startBuiltYear}
+            </if>
+            <if test="endBuiltYear!=null and endBuiltYear!=''">
+                and substring(s.build_year,-4) &lt;= #{endBuiltYear}
+            </if>
+            <if test="dwtMin!=null and dwtMin!=''">
+                and CONVERT(REPLACE(s.dwt,',','') , SIGNED)>=#{dwtMin}
+            </if>
+            <if test="dwtMax!=null and dwtMax!=''">
+                and CONVERT(REPLACE(s.dwt,',','') , SIGNED) &lt;= #{dwtMax}
+            </if>
+            <if test="startUpdate!=null and startUpdate!=''">
+                and s.update_date>=#{startUpdate}
+            </if>
+            <if test="endUpdate!=null and endUpdate!=''">
+                and s.update_date &lt;= #{endUpdate}
+            </if>
+            and s.del_flag=0
+        </where>
+        ORDER BY s.id
+        <if test="startCount!=null and lengthCount!=null">
+            limit #{startCount},#{lengthCount}
+        </if>
+    </select>
+
+    <resultMap id="RecordMap" type="PublicShip">
+        <result property="id" column="id"></result>
+        <collection property="type" column="{type_id=type_id}" ofType="Type"
+                    select="com.shipinfo.admin.modules.admin.mapper.PublicShipTypeMapper.getType"/>
+    </resultMap>
+
+
+    <select id="seleteByParamerSearchCount"
+            resultType="com.shipinfo.admin.modules.admin.entity.PublicShip">
+        select * from t_public_ship s
+        <where>
+            1 = 1
+            <if test="imo!=null and imo!=''">
+                and s.imo like concat(concat('%',#{imo}),'%')
+            </if>
+            <if test="name!=null and name!=''">
+                and s.name like concat(concat('%',#{name}),'%')
+            </if>
+            <if test="tid !=0 and tid !=null and tid!=''">
+                and s.type_id=#{tid}
+            </if>
+            <if test="status!=null and status!=''">
+                and s.status =#{status}
+            </if>
+            <if test="startBuiltYear!=null and startBuiltYear!=''">
+                and substring(s.build_year,-4)>=#{startBuiltYear}
+            </if>
+            <if test="endBuiltYear!=null and endBuiltYear!=''">
+                and substring(s.build_year,-4) &lt;= #{endBuiltYear}
+            </if>
+            <if test="dwtMin!=null and dwtMin!=''">
+                and CONVERT(REPLACE(s.dwt,',','') , SIGNED)>=#{dwtMin}
+            </if>
+            <if test="dwtMax!=null and dwtMax!=''">
+                and CONVERT(REPLACE(s.dwt,',','') , SIGNED) &lt;= #{dwtMax}
+            </if>
+            <if test="startUpdate!=null and startUpdate!=''">
+                and s.update_date>=#{startUpdate}
+            </if>
+            <if test="endUpdate!=null and endUpdate!=''">
+                and s.update_date &lt;= #{endUpdate}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectByIdAndType" resultMap="RecordMap">
+        select * from t_public_ship t where t.id=#{0}
+    </select>
+    <select id="selectByImo" resultType="com.shipinfo.admin.modules.admin.entity.PublicShip">
+        select * from t_public_ship p where p.imo=#{0} and p.del_flag=0
+    </select>
+</mapper>

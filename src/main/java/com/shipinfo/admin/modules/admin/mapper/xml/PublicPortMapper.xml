@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shipinfo.admin.modules.admin.mapper.PublicPortMapper">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, port_code AS portCode, port_en AS portEn, port_ch AS portCh, country_code AS countryCode, longitude, latitude, surveyors_count AS surveyorsCount, create_date AS createDate, create_by AS createBy, update_date AS updateDate, update_by AS updateBy, del_flag AS delFlag
+    </sql>
+
+</mapper>

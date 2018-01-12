@@ -1,11 +1,18 @@
+
 # Compiled class file
 *.class
+**/target/
+**/logs
 
 # Log file
 *.log
 
 # BlueJ files
 *.ctxt
+
+**/CustomGenerator.java
+**/application.yml
+.idea
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
