@@ -35,7 +35,7 @@ public class RoleController extends BaseController{
 
 
     @GetMapping
-    @ApiOperation("查询角色信息")
+    @ApiOperation("查询角色的信息")
     public JSONObject listMenu(@ApiParam("角色名称") @RequestParam String roleName) {
         EntityWrapper<Role> ew = getEntityWrapper();
         if (!StringUtils.isEmpty(roleName))
