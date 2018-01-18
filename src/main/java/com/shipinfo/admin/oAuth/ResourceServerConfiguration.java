@@ -36,7 +36,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 
         http
                 .authorizeRequests()
-                .antMatchers("/ship/**","/role/**","/right/**","/swagger-resources/**","/swagger-ui.html","/webjars/**","/v2/api-docs").permitAll()
+                .antMatchers("/ship/**","/role/**","/right/**").permitAll()
                // .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()//设置跨域访问
                 .anyRequest().authenticated()
                 .and()
