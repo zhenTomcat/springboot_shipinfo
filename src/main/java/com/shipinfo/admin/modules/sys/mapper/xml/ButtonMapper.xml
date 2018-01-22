@@ -4,13 +4,23 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, menu_id AS menuId, button_name AS buttonName, button_url AS buttonUrl, del_flag AS delFlag
+        id, menu_id AS menuId, button_name AS buttonName, button_url AS buttonUrl, del_flag AS delFlag, method
     </sql>
 
     <select id="selectAllButtons" resultType="com.shipinfo.admin.modules.sys.entity.Button">
         select b.* from sys_button b JOIN sys_role_resource rr ON rr.resource_id=b.id
         where rr.role_id=#{id}
     </select>
+
+    <select id="selectButtonsUserId" resultType="com.shipinfo.admin.modules.sys.entity.Button">
+        select  b.*
+        from sys_user_role ur, sys_role_resource rs, sys_button b
+        where ur.role_id= rs.role_id
+        and rs.resource_id = b.id
+        and b.del_flag = 0
+        and ur.user_id = #{id}
+    </select>
+
     <select id="findButtonsByUserId" resultType="com.shipinfo.admin.modules.sys.entity.Button">
         select distinct b.*
         from sys_button b, sys_role_resource rs, sys_user_role ur

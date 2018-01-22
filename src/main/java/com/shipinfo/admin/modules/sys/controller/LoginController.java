@@ -8,6 +8,7 @@ import com.shipinfo.admin.utils.Const;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,8 +38,8 @@ public class LoginController extends BaseController{
         User user=new User();
         user.setLoginName(username);
         user.setDelFlag(Const.DEL_FLAG_NORMAL);
-        Md5PasswordEncoder md5PasswordEncoder=new Md5PasswordEncoder();
-        String p=md5PasswordEncoder.encodePassword(password,null);
+        BCryptPasswordEncoder encode = new BCryptPasswordEncoder();
+        String p=encode.encode(password);
         user.setPassword(p);
         userService.insert(user);
 

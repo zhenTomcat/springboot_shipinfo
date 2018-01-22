@@ -105,12 +105,13 @@ public class MenuController extends BaseController{
 
     /************************Button*****************************/
 
-    @ApiOperation("查看当前菜单里，按钮信息")
-    @GetMapping(value = "/button")
-    public JSONObject listBtn(@ApiParam("菜单id") @RequestParam Integer menuId,@ApiParam("搜索条件") @RequestParam String keyword) {
+    @ApiOperation("查看当前菜单里，资源信息")
+    @GetMapping(value = "/{id}/button")
+    public JSONObject listBtn(@ApiParam("菜单id") @PathVariable Integer id,
+                              @ApiParam("搜索条件") @RequestParam String keyword) {
         EntityWrapper<Button> ew = new EntityWrapper<>();
         ew.where("del_flag={0}", Const.DEL_FLAG_NORMAL);
-        ew.addFilter("menu_id={0}", menuId);
+        ew.addFilter("menu_id={0}", id);
         if (!StringUtils.isEmpty(keyword))
             ew.addFilter(" CONCAT(IFNULL(button_name,''),IFNULL(button_url,'')) like {0}", "%" + keyword + "%");
         return jsonPage(buttonService.selectPage(getPage(), ew));
@@ -118,7 +119,7 @@ public class MenuController extends BaseController{
 
     //添加按钮信息
     @PostMapping(value = "/button")
-    @ApiOperation("添加button信息")
+    @ApiOperation("添加资源信息")
     public JSONObject addBtn(@RequestBody Button button) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("status", 200);
@@ -129,7 +130,7 @@ public class MenuController extends BaseController{
 
     //更新按钮信息
     @PutMapping(value = "/button")
-    @ApiOperation("更新button信息")
+    @ApiOperation("更新资源信息")
     public JSONObject editBtn(@RequestBody Button button) {
         JSONObject jsonObject = new JSONObject();
         buttonService.updateById(button);
@@ -147,7 +148,7 @@ public class MenuController extends BaseController{
         return jsonObject;
     }
     @ApiOperation("批量删除button信息")
-    @DeleteMapping(value = "/button/{ids}}")
+    @DeleteMapping(value = "/button/batch/{ids}}")
     public JSONObject batchDeleteBtn(@PathVariable String ids) {
         JSONObject jsonObject = new JSONObject();
         buttonService.deleteBatchIds(Arrays.asList(ids.split(",")));

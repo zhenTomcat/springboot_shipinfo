@@ -13,6 +13,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.AntPathMatcher;
 
 import javax.annotation.PostConstruct;
 import java.util.*;
@@ -32,10 +33,13 @@ public class MyInvocationSecurityMetadataSourceService implements FilterInvocati
     private IRoleService roleService;
 
 
-    private static Map<String,Collection<ConfigAttribute>> resourceMap=new HashMap<>();
+    private AntPathMatcher antPathMatcher=new AntPathMatcher();
 
 
-    //查询所有的资源和权限的对应关系
+//    private static Map<String,Collection<ConfigAttribute>> resourceMap=new HashMap<>();
+
+
+/*    //查询所有的资源和权限的对应关系
     @PostConstruct
     private void loadResourceDefine(){
         List<Role> roles=roleService.selectAllRoles();
@@ -56,18 +60,22 @@ public class MyInvocationSecurityMetadataSourceService implements FilterInvocati
                 }
             }
         }
-    }
+    }*/
 
     @Override
     public Collection<ConfigAttribute> getAttributes(Object o) throws IllegalArgumentException {
+
         String url = ((FilterInvocation) o).getRequestUrl();
         String method= ((FilterInvocation) o).getRequest().getMethod();
-        int firstQuestionMarkIndex=url.indexOf("?");
-        if(firstQuestionMarkIndex!=-1){
-            url=url.substring(0,firstQuestionMarkIndex);
-        }
-        Collection<ConfigAttribute> attrs=resourceMap.get(url);
-        if(attrs!=null){
+
+        List<Role> roles=roleService.selectRolesByUriAndMethod(url,method);
+
+        if (roles!=null && roles.size()>0){
+            Collection<ConfigAttribute> attrs=new ArrayList<>();
+            for (Role r:roles){
+
+                attrs.add(new SecurityConfig(r.getRoleName()));
+            }
             return attrs;
         }
         //直接放行，不去执行MyAccessDecisionManager
@@ -84,14 +92,4 @@ public class MyInvocationSecurityMetadataSourceService implements FilterInvocati
         return true;
     }
 
-    private void addUrlResourceMap(String url,ConfigAttribute ca){
-            if(resourceMap.containsKey(url)){
-                Collection<ConfigAttribute> value=resourceMap.get(url);
-                value.add(ca);
-            }else {
-                Collection<ConfigAttribute> atts = new ArrayList<ConfigAttribute>();
-                atts.add(ca);
-                resourceMap.put(url, atts);
-            }
-    }
 }

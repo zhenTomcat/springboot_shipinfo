@@ -60,6 +60,8 @@ public class Menu extends Model<Menu> {
 	@TableField("del_flag")
 	private Integer delFlag;
 
+	private String method;
+
 	@TableField(exist = false)
 	private List<Menu> subMenu;
 
@@ -155,6 +157,14 @@ public class Menu extends Model<Menu> {
 
 	public void setSubMenu(List<Menu> subMenu) {
 		this.subMenu = subMenu;
+	}
+
+	public String getMethod() {
+		return method;
+	}
+
+	public void setMethod(String method) {
+		this.method = method;
 	}
 
 	@Override

@@ -148,4 +148,9 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
             }
         }
     }
+
+    @Override
+    public List<Role> selectRolesByUriAndMethod(String url, String method) {
+        return roleMapper.selectRolesByUriAndMethod(url, method);
+    }
 }

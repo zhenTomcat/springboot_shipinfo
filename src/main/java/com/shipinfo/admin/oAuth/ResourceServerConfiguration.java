@@ -36,13 +36,12 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 
         http
                 .authorizeRequests()
-                .antMatchers("/ship/**","/role/**","/right/**").permitAll()
+                .antMatchers("/sys/registry").permitAll()
                // .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()//设置跨域访问
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().accessDeniedHandler(new OAuth2AccessDeniedHandler());
         http.addFilterBefore(filterSecurityInterceptor,FilterSecurityInterceptor.class);
-
         //配置order访问控制，必须认证过后才可以访问
     }
 }

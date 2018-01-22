@@ -4,7 +4,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, menu_name AS menuName, menu_url AS menuUrl, parent_id AS parentId, menu_order AS menuOrder, menu_icon AS menuIcon, menu_type AS menuType, removable, description, del_flag AS delFlag
+        id, menu_name AS menuName, menu_url AS menuUrl, parent_id AS parentId, menu_order AS menuOrder, menu_icon AS menuIcon, menu_type AS menuType, removable, description, del_flag AS delFlag, method
     </sql>
 
 
@@ -12,6 +12,16 @@
         select s.* from sys_menu s JOIN sys_role_resource rr ON rr.resource_id=s.id
         where rr.role_id=#{id}
     </select>
+
+    <!--<select id="selectMenusByUserId" resultType="com.shipinfo.admin.modules.sys.entity.Menu">
+        select  m.*
+        from sys_user_role ur, sys_role_resource rs, sys_menu m
+        where ur.role_id= rs.role_id
+        and rs.resource_id = m.id
+        and rs.resource_type != 0
+        and m.del_flag != -1
+        and ur.user_id = #{userId}
+    </select>-->
 
 
     <select id="findParentMenusByUserId" parameterType="Integer" resultType="com.shipinfo.admin.modules.sys.entity.Menu">

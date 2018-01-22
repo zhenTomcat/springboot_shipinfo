@@ -97,7 +97,7 @@ public class PublicShipController extends BaseController{
         return  status;
     }
 
-    @GetMapping("/medias")
+    @GetMapping("/{id}/medias")
     @ApiOperation("获取该船舶的文件信息")
     public List<Media> medias(@ApiParam("船舶id") @PathVariable Integer id){
         EntityWrapper<Media> ew = getEntityWrapper();
@@ -189,7 +189,7 @@ public class PublicShipController extends BaseController{
         try {
             Boolean flag = publicShipService.updateByExcel(file);
             jsonObject.put("flag", flag);
-            jsonObject.put("status", 400);
+            jsonObject.put("status", 200);
         } catch (Exception e) {
             jsonObject.put("status", 500);
         }

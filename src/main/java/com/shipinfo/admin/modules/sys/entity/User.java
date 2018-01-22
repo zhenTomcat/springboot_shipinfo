@@ -119,6 +119,12 @@ public class User extends Model<User> {
 	@TableField(exist = false)
 	private String roleIds;
 
+	@TableField(exist = false)
+	private List<Menu> menus;
+
+	@TableField(exist = false)
+	private List<Button> buttons;
+
 	public Integer getId() {
 		return id;
 	}
@@ -316,6 +322,22 @@ public class User extends Model<User> {
 
 	public void setRoleIds(String roleIds) {
 		this.roleIds = roleIds;
+	}
+
+	public List<Menu> getMenus() {
+		return menus;
+	}
+
+	public void setMenus(List<Menu> menus) {
+		this.menus = menus;
+	}
+
+	public List<Button> getButtons() {
+		return buttons;
+	}
+
+	public void setButtons(List<Button> buttons) {
+		this.buttons = buttons;
 	}
 
 	@Override

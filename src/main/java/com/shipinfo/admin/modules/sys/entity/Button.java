@@ -42,6 +42,8 @@ public class Button extends Model<Button> {
 	@TableField("del_flag")
 	private Integer delFlag;
 
+	private String method;
+
 
 	public Integer getId() {
 		return id;
@@ -86,6 +88,14 @@ public class Button extends Model<Button> {
 	@Override
 	protected Serializable pkVal() {
 		return this.id;
+	}
+
+	public String getMethod() {
+		return method;
+	}
+
+	public void setMethod(String method) {
+		this.method = method;
 	}
 
 	@Override

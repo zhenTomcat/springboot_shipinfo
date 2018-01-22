@@ -30,4 +30,6 @@ public interface IRoleService extends IService<Role> {
 
     void editRight(String selRes, Integer roleId);
 
+    List<Role> selectRolesByUriAndMethod(String url,String method);
+
 }

@@ -10,6 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.stereotype.Service;
+import org.springframework.util.AntPathMatcher;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
@@ -22,14 +23,10 @@ import java.util.Iterator;
 
 @Service
 public class MyAccessDecisionManager implements AccessDecisionManager{
+    private AntPathMatcher antPathMatcher=new AntPathMatcher();
     @Override
     public void decide(Authentication authentication, Object o, Collection<ConfigAttribute> configAttributes) throws AccessDeniedException, InsufficientAuthenticationException {
-        String url = ((FilterInvocation) o).getRequestUrl();
-        HttpServletRequest request = ((FilterInvocation) o).getHttpRequest();
-        AntPathRequestMatcher matcher;
-        if(configAttributes==null){
-            return;
-        }
+
         Iterator<ConfigAttribute> ite=configAttributes.iterator();
         while (ite.hasNext()){
             ConfigAttribute ca=ite.next();

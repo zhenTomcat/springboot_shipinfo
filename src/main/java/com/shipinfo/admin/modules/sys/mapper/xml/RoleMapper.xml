@@ -35,5 +35,12 @@
         and ur.user_id = u.id
         and u.id=#{userId}
     </select>
+    <select id="selectRolesByUriAndMethod" resultType="com.shipinfo.admin.modules.sys.entity.Role">
+        select r.role_name from sys_role r,sys_role_resource rr,sys_button b
+        where r.id = rr.role_id
+        and rr.resource_id = b.id
+        and b.button_url=#{url}
+        and b.method=#{method}
+    </select>
 
 </mapper>
