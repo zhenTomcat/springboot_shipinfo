@@ -66,14 +66,14 @@ public class MyInvocationSecurityMetadataSourceService implements FilterInvocati
     public Collection<ConfigAttribute> getAttributes(Object o) throws IllegalArgumentException {
 
         String url = ((FilterInvocation) o).getRequestUrl();
+        String reallyUrl=url.substring(0,url.indexOf("?"));
         String method= ((FilterInvocation) o).getRequest().getMethod();
-
-        List<Role> roles=roleService.selectRolesByUriAndMethod(url,method);
+        List<Role> roles=roleService.selectRolesByUriAndMethod(reallyUrl,method);
 
         if (roles!=null && roles.size()>0){
             Collection<ConfigAttribute> attrs=new ArrayList<>();
             for (Role r:roles){
-
+                if (r.getRoleName().equals("ROLE_ADMIN")) return null;
                 attrs.add(new SecurityConfig(r.getRoleName()));
             }
             return attrs;
