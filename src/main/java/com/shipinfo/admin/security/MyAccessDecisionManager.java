@@ -27,6 +27,7 @@ public class MyAccessDecisionManager implements AccessDecisionManager{
     @Override
     public void decide(Authentication authentication, Object o, Collection<ConfigAttribute> configAttributes) throws AccessDeniedException, InsufficientAuthenticationException {
 
+        System.err.print(authentication);
         Iterator<ConfigAttribute> ite=configAttributes.iterator();
         while (ite.hasNext()){
             ConfigAttribute ca=ite.next();

@@ -24,7 +24,7 @@
     <logger name="com.framework" level="DEBUG" />
     <logger name="freemarker.cache" level="ERROR"/>
     <!-- * 通配符 设置log打印级别 对所有类有效TRACE, DEBUG, INFO, WARN, ERROR, ALL 和 OFF-->
-    <root level="DEBUG">
+    <root level="INFO">
         <appender-ref ref="CONSOLE"/>
     </root>
 </configuration>

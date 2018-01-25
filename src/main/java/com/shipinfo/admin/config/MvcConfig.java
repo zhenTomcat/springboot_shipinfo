@@ -22,7 +22,7 @@ public class MvcConfig extends WebMvcConfigurerAdapter{
         registry.addViewController("/home").setViewName("home");
         registry.addViewController("/").setViewName("home");
         registry.addViewController("/hello").setViewName("hello");
-//        registry.addViewController("/login").setViewName("login");
+        //registry.addViewController("/login").setViewName("login");
     }
 
     //从Spring Framework 4.2起，开箱即用的支持CORS,无需自己配置CORSFilter，或者使用注解，@CrossOrigin

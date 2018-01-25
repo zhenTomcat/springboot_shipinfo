@@ -3,22 +3,32 @@ package com.shipinfo.admin.oAuth;
 import com.alibaba.druid.pool.DruidDataSource;
 import org.apache.tomcat.jdbc.pool.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.context.annotation.Primary;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
+import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.approval.UserApprovalHandler;
+import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
+import org.springframework.security.oauth2.provider.token.TokenEnhancer;
+import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.TokenStore;
-import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
+import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
+import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by zhen_Tomcat on 2017/12/26.
@@ -31,18 +41,28 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     @Autowired
     AuthenticationManager authenticationManager;
 
+
+/*
     @Autowired
     private UserApprovalHandler userApprovalHandler;
-
-    @Autowired
-    private TokenStore tokenStore;
+*/
 
    /* @Autowired
     private ClientDetailsService clientDetailsService;*/
 
    /*项目数据库连接池用的Druid*/
-   @Autowired
+    @Autowired
     public DruidDataSource dataSource;
+
+    @Autowired
+    private TokenStore jwtTokenStore;
+
+    @Autowired
+    private JwtAccessTokenConverter jwtAccessTokenConverter;
+
+    @Autowired
+    private TokenEnhancer jwtTokenEnhancer;
+
 
 
     @Override
@@ -75,11 +95,19 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
        * */
         endpoints.pathMapping("/oauth/token","/login");
         endpoints
-                .tokenStore(tokenStore).userApprovalHandler(userApprovalHandler)
+                .authenticationManager(authenticationManager)
+                .accessTokenConverter(jwtAccessTokenConverter)
+                .tokenStore(jwtTokenStore);
 
+        TokenEnhancerChain enhancerChain=new TokenEnhancerChain();
+        List<TokenEnhancer> enhancers=new ArrayList<>();
+        enhancers.add(jwtTokenEnhancer);
+        enhancers.add(jwtAccessTokenConverter);
+        enhancerChain.setTokenEnhancers(enhancers);
+        endpoints.tokenEnhancer(enhancerChain);
                 /*当你选择了资源所有者密码（password）授权类型的时候，
                 请设置这个属性注入一个 AuthenticationManager 对象。*/
-                .authenticationManager(authenticationManager);
+
     }
 
     @Override
@@ -87,4 +115,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
         //允许表单认证
         oauthServer.allowFormAuthenticationForClients();
     }
+
+
+
 }

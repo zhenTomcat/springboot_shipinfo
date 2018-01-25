@@ -1,16 +1,13 @@
 package com.shipinfo.admin.oAuth;
 
-import com.shipinfo.admin.security.MyFilterSecurityInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.error.OAuth2AccessDeniedHandler;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
-import org.springframework.web.cors.CorsUtils;
 
 /**
  * Created by zhen_Tomcat on 2017/12/26.
@@ -24,10 +21,9 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
     @Autowired
     private FilterSecurityInterceptor filterSecurityInterceptor;
 
-
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) {
-        resources.resourceId(DEMO_RESOURCE_ID).stateless(true);
+        resources.resourceId(DEMO_RESOURCE_ID);
     }
 
     @Override
@@ -36,7 +32,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 
         http
                 .authorizeRequests()
-                .antMatchers("/sys/registry").permitAll()
+                .antMatchers("/sys/registry","/me").permitAll()
                // .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()//设置跨域访问
                 .anyRequest().authenticated()
                 .and()
