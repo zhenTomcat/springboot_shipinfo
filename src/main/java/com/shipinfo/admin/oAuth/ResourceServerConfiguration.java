@@ -2,10 +2,10 @@ package com.shipinfo.admin.oAuth;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
-import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.error.OAuth2AccessDeniedHandler;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 
@@ -20,24 +20,15 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 
     @Autowired
     private FilterSecurityInterceptor filterSecurityInterceptor;
-
-    @Override
-    public void configure(ResourceServerSecurityConfigurer resources) {
-        resources.resourceId(DEMO_RESOURCE_ID);
-    }
-
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        // @formatter:off
 
-        http
-                .authorizeRequests()
+        // .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()//设置跨域访问
+        http.antMatcher("/oauth2/api/**").authorizeRequests()
                 .antMatchers("/sys/registry","/me").permitAll()
-               // .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()//设置跨域访问
-                .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().accessDeniedHandler(new OAuth2AccessDeniedHandler());
         http.addFilterBefore(filterSecurityInterceptor,FilterSecurityInterceptor.class);
-        //配置order访问控制，必须认证过后才可以访问
+
     }
 }

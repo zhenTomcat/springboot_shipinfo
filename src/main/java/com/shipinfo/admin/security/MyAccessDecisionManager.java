@@ -34,8 +34,8 @@ public class MyAccessDecisionManager implements AccessDecisionManager{
             String needRole=((SecurityConfig)ca).getAttribute();
 
             for (GrantedAuthority ga:authentication.getAuthorities()){
-
-                if (needRole.trim().endsWith(ga.getAuthority().trim())){
+                String role=ga.getAuthority().trim();
+                if (needRole.trim().endsWith(role)||role.equals("ROLE_ADMIN")){
                     return;
                 }
             }
