@@ -89,13 +89,13 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     }
 
 
-    @Override
+/*    @Override
     public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
         oauthServer
                 .tokenKeyAccess("permitAll()") //url:/oauth/token_key,exposes public key for token verification if using JWT tokens
                 .checkTokenAccess("isAuthenticated()") //url:/oauth/check_token allow check token
                 .allowFormAuthenticationForClients();
-    }
+    }*/
 
 
     protected static class Stuff {
