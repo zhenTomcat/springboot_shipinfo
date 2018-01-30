@@ -32,7 +32,10 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                 "/right/**","/user/**","/file/**","/port/**")
                 .and()
                 .authorizeRequests()
-                .antMatchers("/**").authenticated()
+                .antMatchers("/ship").permitAll().anyRequest().authenticated()//只有上面的请求，才能被认证，
+                                                                            // 只有/ship 不需要被认证，可以直接访问
+                                                                            //其他请求，都要被认证，数据库中也不能有该资源信息，
+                                                                            // 因为我自定义的拦截器会将其拦截
                 .and()
                 .exceptionHandling().accessDeniedHandler(new OAuth2AccessDeniedHandler());
         http.addFilterBefore(filterSecurityInterceptor,FilterSecurityInterceptor.class);
