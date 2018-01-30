@@ -6,6 +6,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
+import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.error.OAuth2AccessDeniedHandler;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 
@@ -24,11 +25,21 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
     public void configure(HttpSecurity http) throws Exception {
 
         // .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()//设置跨域访问
-        http.antMatcher("/oauth2/api/**").authorizeRequests()
-                .antMatchers("/sys/registry","/me").permitAll()
+        http.authorizeRequests()
+                .antMatchers("/sys/registry","/me","/mm").permitAll()
                 .and()
                 .exceptionHandling().accessDeniedHandler(new OAuth2AccessDeniedHandler());
+        /*http.requestMatchers().antMatchers("/api*//**","/oauth2/api**")
+                .and()
+                .authorizeRequests()
+                .antMatchers("/api*//**").authenticated();*/
+
         http.addFilterBefore(filterSecurityInterceptor,FilterSecurityInterceptor.class);
 
+    }
+
+    @Override
+    public void configure(ResourceServerSecurityConfigurer resources) {
+        resources.resourceId(DEMO_RESOURCE_ID).stateless(false);
     }
 }

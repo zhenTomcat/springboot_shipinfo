@@ -1,15 +1,22 @@
 package com.shipinfo.admin.oAuth;
 
 import com.alibaba.druid.pool.DruidDataSource;
+import com.shipinfo.admin.handler.SparklrUserApprovalHandler;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.*;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.ClientDetailsService;
+import org.springframework.security.oauth2.provider.approval.ApprovalStore;
+import org.springframework.security.oauth2.provider.approval.TokenApprovalStore;
+import org.springframework.security.oauth2.provider.approval.TokenStoreUserApprovalHandler;
+import org.springframework.security.oauth2.provider.approval.UserApprovalHandler;
+import org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestFactory;
+import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.TokenStore;
@@ -41,10 +48,11 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     @Autowired
     private TokenEnhancer jwtTokenEnhancer;
 
+    @Autowired
+    private UserApprovalHandler userApprovalHandler;
+
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        //配置两个客户端,一个用于password认证一个用于client认证
-       //使用jdbc去连接数据库，将DataSource，注入到configurer中，oauth2内部会自动调用该查询，查找数据库中的数据
         clients.jdbc(dataSource);
 
         //下面的是将ClientDetails存在Memory中，
@@ -66,7 +74,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         //endpoints.pathMapping("/oauth/token","/login_login");
-        endpoints
+        endpoints.userApprovalHandler(userApprovalHandler)
                 .authenticationManager(authenticationManager)
                 .accessTokenConverter(jwtAccessTokenConverter)
                 .tokenStore(jwtTokenStore);
@@ -77,11 +85,44 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
         enhancers.add(jwtAccessTokenConverter);
         enhancerChain.setTokenEnhancers(enhancers);
         endpoints.tokenEnhancer(enhancerChain);
+
     }
 
+
     @Override
-    public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
-        super.configure(security);
+    public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
+        oauthServer
+                .tokenKeyAccess("permitAll()") //url:/oauth/token_key,exposes public key for token verification if using JWT tokens
+                .checkTokenAccess("isAuthenticated()") //url:/oauth/check_token allow check token
+                .allowFormAuthenticationForClients();
+    }
+
+
+    protected static class Stuff {
+
+        @Autowired
+        private ClientDetailsService clientDetailsService;
+
+        @Autowired
+        private TokenStore tokenStore;
+
+        @Bean
+        public ApprovalStore approvalStore() throws Exception {
+            TokenApprovalStore store = new TokenApprovalStore();
+            store.setTokenStore(tokenStore);
+            return store;
+        }
+
+        @Bean
+        @Autowired
+        public SparklrUserApprovalHandler userApprovalHandler() throws Exception {
+            SparklrUserApprovalHandler handler = new SparklrUserApprovalHandler();
+            handler.setApprovalStore(approvalStore());
+            handler.setRequestFactory(new DefaultOAuth2RequestFactory(clientDetailsService));
+            handler.setClientDetailsService(clientDetailsService);
+            handler.setUseApprovalStore(true);
+            return handler;
+        }
     }
 
 }

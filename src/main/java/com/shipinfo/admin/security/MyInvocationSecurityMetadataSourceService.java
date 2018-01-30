@@ -67,6 +67,8 @@ public class MyInvocationSecurityMetadataSourceService implements FilterInvocati
 
         String requestUri = ((FilterInvocation) o).getRequestUrl();
 
+        String authorize=((FilterInvocation) o).getRequest().getHeader("Authorization");
+
         if (requestUri.contains("?")){
             requestUri=requestUri.substring(0,requestUri.indexOf("?"));
         }
@@ -78,7 +80,6 @@ public class MyInvocationSecurityMetadataSourceService implements FilterInvocati
         if (roles!=null && roles.size()>0){
             Collection<ConfigAttribute> attrs=new ArrayList<>();
             for (Role r:roles){
-                if (r.getRoleName().equals("ROLE_ADMIN")) return null;
                 attrs.add(new SecurityConfig(r.getRoleName()));
             }
             return attrs;

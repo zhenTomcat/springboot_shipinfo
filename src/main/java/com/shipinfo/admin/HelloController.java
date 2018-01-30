@@ -17,11 +17,10 @@ import java.io.UnsupportedEncodingException;
 @RestController
 public class HelloController {
 
-    @CrossOrigin
-    @GetMapping("/product/{id}")
-    public String getProduct(@PathVariable String id) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return "product id : " + id;
+    @GetMapping("/mm/{id}")
+    public String getProduct(@PathVariable Integer id) {
+        return (1/1)+"";
+
     }
 
     /*获取到Authentication只能拿到里面的默认的信息，我们自己向token里面加的信息，是拿不到的，

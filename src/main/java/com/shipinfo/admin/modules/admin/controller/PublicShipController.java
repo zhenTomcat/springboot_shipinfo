@@ -15,6 +15,7 @@ import com.shipinfo.admin.modules.sys.controller.BaseController;
 import com.shipinfo.admin.utils.Const;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -58,6 +59,7 @@ public class PublicShipController extends BaseController{
                            @RequestParam(required = false) String param,
                            @RequestParam(required = false) Boolean delFlag) {
 
+        Integer id=getCurrentUser().getId();
         EntityWrapper<PublicShip> ew = getEntityWrapper();
         if (StringUtils.isNotEmpty(sqlInfo)) {
             ew.addFilter(sqlInfo);
