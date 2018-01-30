@@ -25,15 +25,16 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
     public void configure(HttpSecurity http) throws Exception {
 
         // .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()//设置跨域访问
-        http.authorizeRequests()
+        /*http.authorizeRequests()
                 .antMatchers("/sys/registry","/me","/mm").permitAll()
-                .and()
-                .exceptionHandling().accessDeniedHandler(new OAuth2AccessDeniedHandler());
-        /*http.requestMatchers().antMatchers("/api*//**","/oauth2/api**")
+                ;*/
+        http.requestMatchers().antMatchers("/ship/**","/role/**",
+                "/right/**","/user/**","/file/**","/port/**")
                 .and()
                 .authorizeRequests()
-                .antMatchers("/api*//**").authenticated();*/
-
+                .antMatchers("/**").authenticated()
+                .and()
+                .exceptionHandling().accessDeniedHandler(new OAuth2AccessDeniedHandler());
         http.addFilterBefore(filterSecurityInterceptor,FilterSecurityInterceptor.class);
 
     }

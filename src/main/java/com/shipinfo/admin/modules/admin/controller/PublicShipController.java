@@ -59,7 +59,7 @@ public class PublicShipController extends BaseController{
                            @RequestParam(required = false) String param,
                            @RequestParam(required = false) Boolean delFlag) {
 
-        Integer id=getCurrentUser().getId();
+//        Integer id=getCurrentUser().getId();
         EntityWrapper<PublicShip> ew = getEntityWrapper();
         if (StringUtils.isNotEmpty(sqlInfo)) {
             ew.addFilter(sqlInfo);

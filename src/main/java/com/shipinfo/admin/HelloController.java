@@ -17,7 +17,7 @@ import java.io.UnsupportedEncodingException;
 @RestController
 public class HelloController {
 
-    @GetMapping("/mm/{id}")
+    @GetMapping("/api/{id}")
     public String getProduct(@PathVariable Integer id) {
         return (1/1)+"";
 
