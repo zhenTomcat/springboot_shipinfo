@@ -55,6 +55,13 @@ public class RoleController extends BaseController{
         return jsonObject;
     }
 
+    @GetMapping("/{id}")
+    @ApiOperation("根据角色id，获取角色信息")
+    public Role get(@PathVariable Integer id) {
+        Role role=roleService.selectById(id);
+        return role;
+    }
+
     @PutMapping
     @ApiOperation("更新角色信息")
     public JSONObject edit(Role role) {
@@ -65,7 +72,7 @@ public class RoleController extends BaseController{
     }
 
     @DeleteMapping("/{id}")
-    @ApiOperation("删除角色信息")
+    @ApiOperation("根据角色id，删除角色信息")
     public JSONObject delete(@PathVariable Integer id) {
         roleService.deleteById(id);
         JSONObject jsonObject = new JSONObject();

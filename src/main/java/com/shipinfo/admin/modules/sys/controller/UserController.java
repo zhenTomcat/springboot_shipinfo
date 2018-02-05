@@ -81,6 +81,14 @@ public class UserController extends BaseController{
         return result;
     }
 
+    //查询
+    @GetMapping("/{id}")
+    @ApiOperation(value = "根据用户id，获取用户信息")
+    public User get(@PathVariable Integer id) {
+        User user=userService.selectById(id);
+        return user;
+    }
+
     //删除
     @DeleteMapping("/{id}")
     @ApiOperation(value = "根据用户id删除用户信息")

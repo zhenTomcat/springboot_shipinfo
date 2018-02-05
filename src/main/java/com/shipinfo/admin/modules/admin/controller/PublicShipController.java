@@ -107,6 +107,14 @@ public class PublicShipController extends BaseController{
         return medias;
     }
 
+    @GetMapping("/{id}")
+    @ApiOperation("根据船舶id，获取该船舶的信息")
+    public PublicShip edit( @PathVariable Integer id) {
+        PublicShip publicShip = publicShipService.selectById(id);
+
+        return publicShip;
+    }
+
     @PutMapping
     @ApiOperation("更新该船舶的信息")
     public JSONObject editComplete(PublicShip publicShip, Integer tid, String dataJson) {

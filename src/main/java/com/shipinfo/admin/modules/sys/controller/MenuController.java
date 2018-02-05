@@ -85,6 +85,13 @@ public class MenuController extends BaseController{
         return jsonObject;
     }
 
+    @GetMapping("/{id}")
+    @ApiOperation("根据菜单id，获取信息")
+    public Menu toEditMenu(@PathVariable Integer id) {
+        Menu menu = menuService.selectById(id);
+        return menu;
+    }
+
     @DeleteMapping("/{id}")
     @ApiOperation("根据菜单id，删除信息")
     public JSONObject deleteMenu(@PathVariable Integer id) {
@@ -140,13 +147,21 @@ public class MenuController extends BaseController{
 
     //根据按钮id删除
     @ApiOperation("删除button信息")
-    @DeleteMapping(value = "/button/{id}}")
+    @DeleteMapping("/button/{id}}")
     public JSONObject deleteBtn(@PathVariable Integer id) {
         buttonService.deleteById(id);
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("status", 200);
         return jsonObject;
     }
+
+    @ApiOperation("根据id，获取button信息")
+    @GetMapping("/button/{id}")
+    public Button getButton(@PathVariable String id) {
+        Button button=buttonService.selectById(id);
+        return button;
+    }
+
     @ApiOperation("批量删除button信息")
     @DeleteMapping(value = "/button/batch/{ids}}")
     public JSONObject batchDeleteBtn(@PathVariable String ids) {

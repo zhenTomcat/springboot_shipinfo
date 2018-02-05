@@ -58,6 +58,14 @@ public class PublicPortController extends BaseController {
         }
         return jsonObject;
     }
+
+    @GetMapping("/{id}")
+    @ApiOperation("根据港口id，获取港口信息")
+    public PublicPort get(@PathVariable Integer id) {
+        PublicPort port=publicPortService.selectById(id);
+        return port;
+    }
+
     @PutMapping
     @ApiOperation("更新港口信息")
     public JSONObject edit(@RequestBody PublicPort publicPort) {
