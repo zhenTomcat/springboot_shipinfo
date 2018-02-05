@@ -34,7 +34,8 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                 "/right/**","/user/**","/file/**","/port/**")
                 .and()
                 .authorizeRequests()
-                .antMatchers("/ship").permitAll().anyRequest().authenticated()
+                .regexMatchers(HttpMethod.GET,"/ship/.*").permitAll()
+                .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().accessDeniedHandler(new OAuth2AccessDeniedHandler());
         http.addFilterBefore(filterSecurityInterceptor,FilterSecurityInterceptor.class);

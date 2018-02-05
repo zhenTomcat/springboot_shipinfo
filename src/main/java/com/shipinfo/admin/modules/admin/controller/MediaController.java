@@ -41,7 +41,7 @@ public class MediaController extends BaseController{
         return jsonPage(page);
     }
 
-    @DeleteMapping(value = "/{id}")
+    @DeleteMapping("/{id}")
     @ApiOperation("根据id删除文件信息")
     public JSONObject delteMedia(@PathVariable Integer id){
         JSONObject jsonObject = new JSONObject();
@@ -56,6 +56,13 @@ public class MediaController extends BaseController{
         }
 
         return jsonObject;
+    }
+
+    @GetMapping("/{id}")
+    @ApiOperation("根据id，获取文件信息")
+    public Media getMedia(@PathVariable Integer id){
+        Media media = mediaService.selectById(id);
+        return media;
     }
 
     @PostMapping
