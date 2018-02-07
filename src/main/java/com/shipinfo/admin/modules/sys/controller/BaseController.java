@@ -8,6 +8,9 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.shipinfo.admin.modules.sys.entity.User;
 import com.shipinfo.admin.security.SecurityUser;
 import com.shipinfo.admin.utils.Const;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -21,6 +24,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -33,6 +37,8 @@ import java.util.Date;
  * @Date Apr 17, 2015
  */
 public class BaseController {
+
+    private static final User user=null;
 
 
     @Autowired
@@ -56,11 +62,20 @@ public class BaseController {
     }
 
 
-    public SecurityUser getCurrentUser() {
-        SecurityUser userDetails = (SecurityUser) SecurityContextHolder.getContext()
-                .getAuthentication()
-                .getPrincipal();
-        return userDetails;
+    public User getCurrentUser(){
+        User user=new User();
+        String header =request.getHeader("Authorization");
+        String token= StringUtils.substringAfter(header,"bearer");
+
+        Claims claims= null;
+        try {
+            claims = Jwts.parser().setSigningKey("shipinfo".getBytes("UTF-8")).parseClaimsJws(token).getBody();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        user.setId((Integer) claims.get("id"));
+        user.setLoginName((String) claims.get("username"));
+        return user;
     }
 
     /**

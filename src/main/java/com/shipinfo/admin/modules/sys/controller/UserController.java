@@ -3,6 +3,7 @@ package com.shipinfo.admin.modules.sys.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.shipinfo.admin.modules.sys.entity.Role;
 import com.shipinfo.admin.modules.sys.entity.User;
 import com.shipinfo.admin.modules.sys.service.IRoleService;
 import com.shipinfo.admin.modules.sys.service.IUserService;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Controller;
 
 import javax.security.auth.Subject;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * <p>
@@ -158,6 +160,13 @@ public class UserController extends BaseController{
             userService.deleteBatchIds(Arrays.asList(ids.split(",")));
         result.put("status", 200);
         return result;
+    }
+
+    @GetMapping(value = "/{id}/roles")
+    @ApiOperation(value = "根据用户的id，获取用户的角色")
+    public List<Role> getRole(@PathVariable Integer id) {
+        List<Role> roles = userService.getRoles(id);
+        return roles;
     }
 
 

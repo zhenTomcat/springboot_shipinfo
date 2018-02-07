@@ -1,5 +1,6 @@
 package com.shipinfo.admin.config.jwt;
 
+import com.shipinfo.admin.modules.sys.entity.User;
 import org.apache.commons.collections.map.HashedMap;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
@@ -16,8 +17,11 @@ public class JwtTokenEnhancer implements TokenEnhancer{
     @Override
     public OAuth2AccessToken enhance(OAuth2AccessToken auth2AccessToken, OAuth2Authentication authentication) {
         Map<String,Object> info=new HashMap<>();
+        User user = (User) authentication.getUserAuthentication().getPrincipal();
         info.put("company","上海岙洋船务服务有限公司");
 
+        info.put("id",user.getId());
+        info.put("username",user.getLoginName());
         /*因为OAuth2AccessToken是接口，他的默认实现的token，是DefaultOAuth2AccessToken，
         * 转换一下，添加一些附加信息，这样就将自定义信息添加到token里面*/
         ((DefaultOAuth2AccessToken)auth2AccessToken).setAdditionalInformation(info);
