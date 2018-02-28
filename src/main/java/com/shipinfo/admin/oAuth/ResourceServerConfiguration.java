@@ -9,6 +9,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.R
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.error.OAuth2AccessDeniedHandler;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
+import org.springframework.web.cors.CorsUtils;
 
 /**
  * Created by zhen_Tomcat on 2017/12/26.
@@ -21,6 +22,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 
     @Autowired
     private FilterSecurityInterceptor filterSecurityInterceptor;
+
     @Override
     public void configure(HttpSecurity http) throws Exception {
 
@@ -30,15 +32,16 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
             其他请求，都要被认证，数据库中也不能有该资源信息，
              因为我自定义的拦截器会将其拦截
         * */
-        http.requestMatchers().antMatchers("/ship/**","/role/**",
-                "/right/**","/user/**","/file/**","/port/**")
+        http.requestMatchers().antMatchers("/ship/**", "/role/**",
+                "/right/**", "/user/**", "/file/**", "/port/**", "/oauth/token")
                 .and()
                 .authorizeRequests()
-                .regexMatchers(HttpMethod.GET,"/ship/.*","/me").permitAll()
+                .regexMatchers(HttpMethod.GET, "/ship/.*", "/me").permitAll()
+                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().accessDeniedHandler(new OAuth2AccessDeniedHandler());
-        http.addFilterBefore(filterSecurityInterceptor,FilterSecurityInterceptor.class);
+        http.addFilterBefore(filterSecurityInterceptor, FilterSecurityInterceptor.class);
 
     }
 

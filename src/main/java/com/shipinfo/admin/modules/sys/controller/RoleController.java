@@ -21,7 +21,7 @@ import java.util.List;
 
 /**
  * <p>
- *  前端控制器
+ * 前端控制器
  * </p>
  *
  * @author zhenTomcat
@@ -29,17 +29,17 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(value = "/role")
-public class RoleController extends BaseController{
+public class RoleController extends BaseController {
     @Autowired
     private IRoleService roleService;
 
 
     @GetMapping
     @ApiOperation("查询角色信息")
-    public JSONObject listMenu(@ApiParam("角色名称") @RequestParam String roleName) {
+    public JSONObject listMenu(@ApiParam("角色名称") @RequestParam(required = false) String roleName) {
         EntityWrapper<Role> ew = getEntityWrapper();
         if (!StringUtils.isEmpty(roleName))
-            ew.addFilter("role_name={0}",roleName);
+            ew.addFilter("role_name={0}", roleName);
         Page<Role> page = roleService.selectPage(getPage(), ew);
         return jsonPage(page);
     }
@@ -58,7 +58,7 @@ public class RoleController extends BaseController{
     @GetMapping("/{id}")
     @ApiOperation("根据角色id，获取角色信息")
     public Role get(@PathVariable Integer id) {
-        Role role=roleService.selectById(id);
+        Role role = roleService.selectById(id);
         return role;
     }
 

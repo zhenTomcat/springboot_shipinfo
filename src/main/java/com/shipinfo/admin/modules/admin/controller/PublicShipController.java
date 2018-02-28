@@ -29,7 +29,7 @@ import java.util.List;
 
 /**
  * <p>
- *  前端控制器
+ * 前端控制器
  * </p>
  *
  * @author zhenTomcat
@@ -37,7 +37,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(value = "/ship")
-public class PublicShipController extends BaseController{
+public class PublicShipController extends BaseController {
     private static final String CATEGOTY_TYPE = "type";
     private static final String CATEGOTY_STATUS = "status";
     private static final String CATEGOTY_COUNTRY = "country";
@@ -79,28 +79,28 @@ public class PublicShipController extends BaseController{
 
     @GetMapping("/type")
     @ApiOperation("获取船舶类型")
-    public List<PublicShipType> shipType(){
+    public List<PublicShipType> shipType() {
         List<PublicShipType> types = publicShipTypeService.listTypes(CATEGOTY_TYPE);
-        return  types;
+        return types;
     }
 
     @GetMapping("/status")
     @ApiOperation("获取船舶售卖状态")
-    public List<PublicShipType> shipStatus(){
+    public List<PublicShipType> shipStatus() {
         List<PublicShipType> status = publicShipTypeService.listTypes(CATEGOTY_STATUS);
-        return  status;
+        return status;
     }
 
     @GetMapping("/country")
     @ApiOperation("获取所有的国家信息")
-    public List<PublicShipType> shipCountry(){
+    public List<PublicShipType> shipCountry() {
         List<PublicShipType> status = publicShipTypeService.listTypes(CATEGOTY_COUNTRY);
-        return  status;
+        return status;
     }
 
     @GetMapping("/{id}/medias")
     @ApiOperation("获取该船舶的文件信息")
-    public List<Media> medias(@ApiParam("船舶id") @PathVariable Integer id){
+    public List<Media> medias(@ApiParam("船舶id") @PathVariable Integer id) {
         EntityWrapper<Media> ew = getEntityWrapper();
         ew.addFilter("shipinfo_id={0}", id);
         List<Media> medias = mediaService.selectList(ew);
@@ -109,7 +109,7 @@ public class PublicShipController extends BaseController{
 
     @GetMapping("/{id}")
     @ApiOperation("根据船舶id，获取该船舶的信息")
-    public PublicShip edit( @PathVariable Integer id) {
+    public PublicShip edit(@PathVariable Integer id) {
         PublicShip publicShip = publicShipService.selectById(id);
 
         return publicShip;
@@ -117,12 +117,12 @@ public class PublicShipController extends BaseController{
 
     @PutMapping
     @ApiOperation("更新该船舶的信息")
-    public JSONObject editComplete(PublicShip publicShip, Integer tid, String dataJson) {
+    public JSONObject editComplete(@RequestBody() PublicShip publicShip, Integer tid, String dataJson) {
         JSONObject jsonObject = new JSONObject();
 
-        publicShip.setTypeId(tid);
+//        publicShip.setTypeId(tid);
         try {
-            publicShipService.updateShip(publicShip, dataJson);
+            boolean i = publicShipService.updateShip(publicShip, dataJson);
             jsonObject.put("status", 200);
         } catch (RuntimeException e) {
             jsonObject.put("status", 500);
@@ -166,9 +166,9 @@ public class PublicShipController extends BaseController{
             PublicShip ship = publicShipService.selectById(id);
             ship.setDelFlag(Const.DEL_FLAG_DELETE);
             publicShipService.updateById(ship);
-            jsonObject.put("status", 1);
+            jsonObject.put("status", 200);
         } catch (Exception e) {
-            jsonObject.put("status", 0);
+            jsonObject.put("status", 500);
             jsonObject.put("msg", "删除错误，请稍后再试");
         }
 
@@ -178,7 +178,7 @@ public class PublicShipController extends BaseController{
     //导出excel
     @GetMapping("/excel/{ids}")
     @ApiOperation("导出excel表格")
-    private void excel( HttpServletResponse response, @RequestParam String ids) {
+    private void excel(HttpServletResponse response, @RequestParam String ids) {
         List<PublicShip> ships = new ArrayList<>();
         if (ids != null && ids != "") {
             String[] id = ids.substring(0, ids.length() - 1).split(",");
@@ -210,10 +210,9 @@ public class PublicShipController extends BaseController{
     @ApiOperation("该接口是给.Net项目访问的")
     public JSONObject crossDomain(@RequestParam(required = false) String dataJson) {
         JSONObject jsonObject = new JSONObject();
-        if(publicShipService.updateShipAndMedia(dataJson)){
+        if (publicShipService.updateShipAndMedia(dataJson)) {
             jsonObject.put("mes", true);
-        }else
-        {
+        } else {
             jsonObject.put("mes", false);
         }
 

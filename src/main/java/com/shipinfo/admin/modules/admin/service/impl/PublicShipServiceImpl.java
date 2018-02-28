@@ -33,7 +33,7 @@ import java.util.List;
 
 /**
  * <p>
- *  服务实现类
+ * 服务实现类
  * </p>
  *
  * @author zhenTomcat
@@ -67,7 +67,7 @@ public class PublicShipServiceImpl extends ServiceImpl<PublicShipMapper, PublicS
     @Override
     public Boolean updateShip(PublicShip ship, String dataJson) {
         ship.setUpdateDate(new Date());
-        publicShipMapper.updateById(ship);
+        int aa = publicShipMapper.updateById(ship);
         if (ship.getMedias() != null) {
             for (Media m : ship.getMedias()) {
                 m.setCreateDate(new Date());
